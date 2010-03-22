@@ -53,7 +53,7 @@ class Client(threading.Thread):
             message = self.client.recv(self.size)
             if message:
                 f = open(self.address[0], 'w')
-                message = '<p><strong>' + self.address[0] + '</strong>: \"' + message + '\"</p>\n' 
+                message = '<p><strong>' + self.address[0] + '</strong>: ' + message + '</p>\n' 
                 f.write(message)
                 f.close()
             else:

@@ -30,11 +30,7 @@ while [ 1 ]; do
     cat $TAIL >> $TMPFILE
     mv $TMPFILE $HTML
 	chmod a+r $HTML
-	if [ `date +'%S'` -lt 4 ]; then
-		for i in $PATTERN; do
-		   rm -f $i
-		done
-	fi
+	find -name "$PATTERN" -mmin +2 -exec rm '{}' \;
     sleep 4
 done
 
