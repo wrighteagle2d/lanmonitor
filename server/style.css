@@ -1,0 +1,11 @@
+html { 
+	 margin-left: 10%;
+	 margin-right: 10%;
+	 font-family: arial, helvetica, Verdana, sans-serif;
+}
+
+body {
+	background-color:#b0c4de;
+}
+
+pre { font-family: monospace; }
