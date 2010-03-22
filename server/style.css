@@ -1,11 +1,9 @@
 html { 
-	 margin-left: 10%;
-	 margin-right: 10%;
-	 font-family: arial, helvetica, Verdana, sans-serif;
+	 margin-left: 1%;
+	 margin-right: 1%;
+	 font-family: monospace;
 }
 
 body {
 	background-color:#b0c4de;
 }
-
-pre { font-family: monospace; }
