@@ -9,6 +9,8 @@ PYTHON=`which python`
 
 exec 1>$LOG 2>&1
 
+cd /usr/local/bin/lanmonitor/server
+
 rm -f $HTML
 for i in $PATTERN; do
    rm -f $i
@@ -27,6 +29,12 @@ while [ 1 ]; do
     fi
     cat $TAIL >> $TMPFILE
     mv $TMPFILE $HTML
+	chmod a+r $HTML
+	if [ `date +'%S'` -lt 4 ]; then
+		for i in $PATTERN; do
+		   rm -f $i
+		done
+	fi
     sleep 4
 done
 
