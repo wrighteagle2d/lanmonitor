@@ -1,33 +1,36 @@
 #!/usr/bin/env python
 
-import socket
+import os
 import sys
 import time
-import subprocess
+import socket
 
 host = '192.168.26.160'
 port = 50000
 
+def get_output(cmd):
+    pipe = os.popen(cmd)
+    output = pipe.read()
+    pipe.close()
+    return output
+
 def build_message( ):
-    message = uptime().strip() + ", "
+    message = uptime() + ", "
     message += rcssserver()
     return message 
 
 def uptime() :
-    command = subprocess.Popen(['uptime'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return command.communicate()[0]
+    return get_output('uptime').strip()
 
 def rcssserver() :
-    command = subprocess.Popen(['ps', '-o', 'pid=', '-C', 'rcssserver'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return ' #rcssserver %d' % (len(command.communicate()[0].split('\n')) - 1)
+    return ' #rcssserver %d' % (len(get_output('ps -o pid= -C rcssserver').split('\n')) - 1)
 
-def sending(s) :
+def communicate(s) :
     while 1:
         try:
             s.sendall(build_message())
         except socket.error, (value, message):
             print 'send error: ' + message
-            s.close()
             break
         time.sleep(5)
 
@@ -40,6 +43,6 @@ while 1:
         s.close()
         time.sleep(1)
         continue
-    sending(s)
+    communicate(s)
     s.close()
 
