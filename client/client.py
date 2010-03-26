@@ -23,7 +23,11 @@ def uptime() :
     return get_output('uptime').strip()
 
 def rcssserver() :
-    return ' #rcssserver %d' % (len(get_output('ps -o pid= -C rcssserver').split('\n')) - 1)
+	output = get_output('ps -o user= -C rcssserver').split('\n');
+	count = len(output) - 1;
+	if count > 0:
+		return ' #rcssserver %d,%s' % (count, output[0])
+	return ' #rcssserver 0'
 
 def communicate(s) :
     while 1:
