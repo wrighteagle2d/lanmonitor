@@ -30,7 +30,7 @@ def rcssserver() :
     count = len(output) - 1;
     if count > 0:
         team = testing()
-        return ' #rcssserver: %d,%s(%s,%s)' % (count, output[0], team[0], team[1])
+        return ' #rcssserver: %d,%s (%s,%s)' % (count, output[0], team[0], team[1])
     return ' #rcssserver: 0'
 
 def communicate(s) :
@@ -40,7 +40,7 @@ def communicate(s) :
         except socket.error, (value, message):
             print 'send error: ' + message
             break
-        time.sleep(6)
+        time.sleep(10)
 
 while 1:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
