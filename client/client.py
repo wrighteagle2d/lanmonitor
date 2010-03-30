@@ -22,12 +22,16 @@ def build_message( ):
 def uptime() :
     return get_output('uptime').strip()
 
+def testing() :
+    return get_output("ps -o comm= -e | sort | uniq -c | sort -nr | head -2 | awk '{print $2}'").strip().split('\n')
+
 def rcssserver() :
-	output = get_output('ps -o user= -C rcssserver').split('\n');
-	count = len(output) - 1;
-	if count > 0:
-		return ' #rcssserver %d,%s' % (count, output[0])
-	return ' #rcssserver 0'
+    output = get_output('ps -o user= -C rcssserver').split('\n');
+    count = len(output) - 1;
+    if count > 0:
+        team = testing()
+        return ' #rcssserver: %d,%s(%s,%s)' % (count, output[0], team[0], team[1])
+    return ' #rcssserver: 0'
 
 def communicate(s) :
     while 1:
@@ -36,7 +40,7 @@ def communicate(s) :
         except socket.error, (value, message):
             print 'send error: ' + message
             break
-        time.sleep(5)
+        time.sleep(6)
 
 while 1:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
