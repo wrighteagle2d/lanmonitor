@@ -10,9 +10,9 @@ host = '192.168.26.160'
 port = 50000
 
 team_name_map = {
-        re.compile('WE20\d\d'): 'WrightEagle',
+        re.compile('WE20'): 'WrightEagle',
         re.compile('helios'): 'Helios',
-        re.compile('nqplayer'): 'LsuAmoyNQ',
+        re.compile('nq'): 'LsuAmoyNQ',
         re.compile('oxsy'): 'Oxsy',
         re.compile('BS2k'): 'BrainStormer'
         }
@@ -37,7 +37,9 @@ def find_testing_teams() :
     for process in process_list :
         for pattern in team_name_map.keys() :
             if pattern.match(process) :
-                teams.append(team_name_map[pattern])
+                team_name = team_name_map[pattern]
+                if not team_name in teams :
+                    teams.append(team_name)
                 break
         if len(teams) >= 2 :
             break
