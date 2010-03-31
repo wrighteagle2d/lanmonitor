@@ -7,8 +7,6 @@ PATTERN="192.168.*"
 LOG="log"
 PYTHON=`which python`
 
-exec 1>$LOG 2>&1
-
 cd /usr/local/bin/lanmonitor/server
 
 rm -f $HTML
@@ -16,7 +14,7 @@ for i in $PATTERN; do
    rm -f $i
 done
 
-$PYTHON -mSimpleHTTPServer &
+$PYTHON -mSimpleHTTPServer 1>$LOG 2>&1 &
 $PYTHON ./server.py &
 
 while [ 1 ]; do
