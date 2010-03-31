@@ -12,7 +12,7 @@ port = 50000
 team_name_map = {
         re.compile('WE20\d\d'): 'WrightEagle',
         re.compile('helios'): 'Helios',
-        re.compile('nq{player,coach}'): 'LsuAmoyNQ',
+        re.compile('nqplayer'): 'LsuAmoyNQ',
         re.compile('oxsy'): 'Oxsy',
         re.compile('BS2k'): 'BrainStormer'
         }
