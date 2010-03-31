@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import re
 import sys
 import time
 import socket
@@ -8,13 +9,21 @@ import socket
 host = '192.168.26.160'
 port = 50000
 
-def get_output(cmd):
+team_name_map = {
+        re.compile('WE20\d\d'): 'WrightEagle',
+        re.compile('helios'): 'Helios',
+        re.compile('nq{player,coach}'): 'LsuAmoyNQ',
+        re.compile('oxsy'): 'Oxsy',
+        re.compile('BS2k'): 'BrainStormer'
+        }
+
+def get_output(cmd) :
     pipe = os.popen(cmd)
     output = pipe.read()
     pipe.close()
     return output
 
-def build_message( ):
+def build_message( ) :
     message = uptime() + ", "
     message += rcssserver()
     return message 
@@ -22,16 +31,33 @@ def build_message( ):
 def uptime() :
     return get_output('uptime').strip()
 
-def testing() :
-    return get_output("ps -o comm= -e | sort | uniq -c | sort -nr | head -2 | awk '{print $2}'").strip().split('\n')
+def find_testing_teams() :
+    teams = []
+    process_list = get_output("ps -o comm= -e | sort | uniq").strip().split('\n')
+    for process in process_list :
+        for pattern in team_name_map.keys() :
+            if pattern.match(process) :
+                teams.append(team_name_map[pattern])
+                break
+        if len(teams) >= 2 :
+            break
+    return teams
 
 def rcssserver() :
     output = get_output('ps -o user= -C rcssserver').split('\n');
     count = len(output) - 1;
+    message = ' #rcssserver: '
     if count > 0:
-        team = testing()
-        return ' #rcssserver: %d,%s (%s,%s)' % (count, output[0], team[0], team[1])
-    return ' #rcssserver: 0'
+        message += '%d,%s' % (count, output[0])
+        teams = find_testing_teams()
+        if len(teams) > 0 :
+            message += ' ('
+            for team in teams :
+                message += team + ','
+            message = message.strip(',') + ')'
+    else :
+        message += '0'
+    return message
 
 def communicate(s) :
     while 1:
