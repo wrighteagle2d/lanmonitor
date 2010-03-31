@@ -15,7 +15,8 @@ team_name_map = {
         re.compile('helios'): 'Helios',
         re.compile('nq'): 'LsuAmoyNQ',
         re.compile('oxsy'): 'Oxsy',
-        re.compile('BS2k'): 'BrainStormer'
+        re.compile('BS2kAgent'): 'BrainStormer',
+        re.compile('SputCoach'): 'BrainStormer'
         }
 
 def get_output(cmd) :
@@ -32,39 +33,38 @@ def build_message() :
 def uptime() :
     return get_output('uptime').strip()
 
-def find_testing_teams() :
-    teams = []
+def find_testing_team_map() :
+    team_map = {}
     process_map = {}
-    process_list = get_output("ps -o comm= -e | sort | uniq").strip().split('\n')
+    matched_process_map = {}
+
+    process_list = get_output("ps -o comm= -e").strip().split('\n')
+
     random.shuffle(process_list)
     for process in process_list :
+        process_map[process] = 1 + process_map.get(process, 0)
         for pattern in team_name_map.keys() :
             if pattern.match(process) :
-                process_map[process] = 1
+                matched_process_map[process] = 1
                 team_name = team_name_map[pattern]
-                if not team_name in teams :
-                    teams.append(team_name)
+                team_map[team_name] = 1 + team_map.get(team_name, 0)
                 break
-        if len(teams) >= 2 :
-            break
 
-    if len(teams) <= 1 :
-        teams.extend(find_unknown_testing_teams(2 - len(teams), process_map))
+    if len(team_map) <= 1 :
+        count_map = {}
+        for process in process_map.keys() :
+            count_map.setdefault(process_map[process], []).append(process)
+        count_list = count_map.keys()
+        count_list.sort()
+        count_list.reverse()
+        for count in count_list :
+            for process in count_map[count] :
+                if not matched_process_map.has_key(process) :
+                    team_map['[' + process + ']'] = process_map[process]
+                    if len(team_map) >= 2 :
+                        return team_map
 
-    teams.sort()
-    return teams
-
-def find_unknown_testing_teams(left_count, process_map) :
-    teams = []
-    process_list = get_output("ps -o comm= -e | sort | uniq -c | sort -nr | awk '{print $2}'").strip().split('\n')
-    for process in process_list :
-        if not process_map.has_key(process) :
-            teams.append('[' + process + ']')
-            left_count -= 1
-            if left_count <= 0 :
-                break
-    return teams
-
+    return team_map
 
 def rcssserver() :
     output = get_output('ps -o user= -C rcssserver').split('\n');
@@ -72,12 +72,12 @@ def rcssserver() :
     message = ' #rcssserver: '
     if count > 0:
         message += '%d,%s' % (count, output[0])
-        teams = find_testing_teams()
-        if len(teams) > 0 :
+        team_map = find_testing_team_map()
+        if len(team_map) > 0 :
             message += ' ('
-            for team in teams :
-                message += team + ','
-            message = message.strip(',') + ')'
+            for team in sorted(team_map.keys()) :
+                message += '%s x %s, ' % (team, team_map[team])
+            message = message.rstrip(', ') + ')'
     else :
         message += '0'
     return message
