@@ -11,7 +11,7 @@ host = '192.168.26.160'
 port = 50000
 
 team_name_map = {
-        re.compile('WE'): 'WrightEagle',
+        re.compile('WE20'): 'WrightEagle',
         re.compile('helios'): 'Helios',
         re.compile('nq'): 'LsuAmoyNQ',
         re.compile('oxsy'): 'Oxsy',
@@ -34,19 +34,37 @@ def uptime() :
 
 def find_testing_teams() :
     teams = []
+    process_map = {}
     process_list = get_output("ps -o comm= -e | sort | uniq").strip().split('\n')
     random.shuffle(process_list)
     for process in process_list :
         for pattern in team_name_map.keys() :
             if pattern.match(process) :
+                process_map[process] = 1
                 team_name = team_name_map[pattern]
                 if not team_name in teams :
                     teams.append(team_name)
                 break
         if len(teams) >= 2 :
             break
+
+    if len(teams) <= 1 :
+        teams.extend(find_unknown_testing_teams(2 - len(teams), process_map))
+
     teams.sort()
     return teams
+
+def find_unknown_testing_teams(left_count, process_map) :
+    teams = []
+    process_list = get_output("ps -o comm= -e | sort | uniq -c | sort -nr | awk '{print $2}'").strip().split('\n')
+    for process in process_list :
+        if not process_map.has_key(process) :
+            teams.append('[' + process + ']')
+            left_count -= 1
+            if left_count <= 0 :
+                break
+    return teams
+
 
 def rcssserver() :
     output = get_output('ps -o user= -C rcssserver').split('\n');
