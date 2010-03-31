@@ -40,7 +40,6 @@ def find_testing_team_map() :
 
     process_list = get_output("ps -o comm= -e").strip().split('\n')
 
-    random.shuffle(process_list)
     for process in process_list :
         process_map[process] = 1 + process_map.get(process, 0)
         for pattern in team_name_map.keys() :
