@@ -11,12 +11,12 @@ host = '192.168.26.160'
 port = 50000
 
 team_name_map = {
-        re.compile('WE20'): 'WrightEagle',
-        re.compile('helios'): 'Helios',
-        re.compile('nq'): 'LsuAmoyNQ',
-        re.compile('oxsy'): 'Oxsy',
-        re.compile('BS2kAgent'): 'BrainStormer',
-        re.compile('SputCoach'): 'BrainStormer'
+            re.compile('WE20'): 'WrightEagle',
+            re.compile('helios'): 'Helios',
+            re.compile('nq'): 'LsuAmoyNQ',
+            re.compile('oxsy'): 'Oxsy',
+            re.compile('BS2kAgent'): 'BrainStormer',
+            re.compile('SputCoach'): 'BrainStormer'
         }
 
 def get_output(cmd) :
