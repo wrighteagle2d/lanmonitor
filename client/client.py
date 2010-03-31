@@ -4,6 +4,7 @@ import os
 import re
 import sys
 import time
+import random
 import socket
 
 host = '192.168.26.160'
@@ -34,6 +35,7 @@ def uptime() :
 def find_testing_teams() :
     teams = []
     process_list = get_output("ps -o comm= -e | sort | uniq").strip().split('\n')
+    random.shuffle(process_list)
     for process in process_list :
         for pattern in team_name_map.keys() :
             if pattern.match(process) :
