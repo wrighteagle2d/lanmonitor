@@ -70,15 +70,18 @@ def communicate(s) :
             break
         time.sleep(10)
 
-while 1:
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        s.connect((host,port))
-    except socket.error, (value, message):
-        print 'connect error: ' + message
-        s.close()
-        time.sleep(1)
-        continue
-    communicate(s)
-    s.close()
 
+def run() :
+    while 1:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            s.connect((host,port))
+        except socket.error, (value, message):
+            print 'connect error: ' + message
+            s.close()
+            time.sleep(1)
+            continue
+        communicate(s)
+        s.close()
+
+run()
