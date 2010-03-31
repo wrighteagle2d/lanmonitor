@@ -45,6 +45,7 @@ def find_testing_teams() :
                 break
         if len(teams) >= 2 :
             break
+    teams.sort()
     return teams
 
 def rcssserver() :
