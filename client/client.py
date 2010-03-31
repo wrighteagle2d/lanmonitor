@@ -23,7 +23,7 @@ def get_output(cmd) :
     pipe.close()
     return output
 
-def build_message( ) :
+def build_message() :
     message = uptime() + ", "
     message += rcssserver()
     return message 
