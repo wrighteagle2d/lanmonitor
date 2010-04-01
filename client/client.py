@@ -31,13 +31,13 @@ def build_message() :
     return message 
 
 def uptime() :
-    return get_cmd_output('export LANG="POSIX"; uptime').strip()
+    return get_cmd_output('uptime').strip()
 
 def testing_status() :
     server_name = 'rcssserver'
     server_user = ''
 
-    process_list = get_cmd_output('export LANG="POSIX"; ps -e -o comm,user=').strip().split('\n')
+    process_list = get_cmd_output('ps -e -o comm,user=').strip().split('\n')
     process_list.pop(0)
 
     team_count_map = {}
