@@ -31,7 +31,7 @@ def build_message() :
     return message 
 
 def uptime() :
-    return get_cmd_output('uptime').strip()
+    return get_cmd_output('export LANG="POSIX"; uptime').strip()
 
 def testing_status() :
     server_name = 'rcssserver'
