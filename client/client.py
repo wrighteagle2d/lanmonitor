@@ -19,7 +19,7 @@ team_name_map = {
             re.compile('SputCoach'): 'BrainStormer'
         }
 
-def get_output(cmd) :
+def get_cmd_output(cmd) :
     pipe = os.popen(cmd)
     output = pipe.read()
     pipe.close()
@@ -27,58 +27,71 @@ def get_output(cmd) :
 
 def build_message() :
     message = uptime() + ", "
-    message += rcssserver()
+    message += testing_status()
     return message 
 
 def uptime() :
-    return get_output('uptime').strip()
+    return get_cmd_output('uptime').strip()
 
-def find_testing_team_map() :
+def testing_status() :
+    server_name = 'rcssserver'
+    server_user = ''
+
+    process_list = get_cmd_output('export LANG="POSIX"; ps -e -o comm,user=').strip().split('\n')
+    process_list.pop(0)
+
     team_map = {}
-    process_map = {}
-    matched_process_map = {}
-
-    process_list = get_output("ps -o comm= -e").strip().split('\n')
+    cmd_count_map = {}
+    matched_cmds = {}
 
     for process in process_list :
-        process_map[process] = 1 + process_map.get(process, 0)
+        info = process.split()
+        (cmd, user) = (info[0], info[1])
+
+        cmd_count_map[cmd] = 1 + cmd_count_map.get(cmd, 0)
         for pattern in team_name_map.keys() :
-            if pattern.match(process) :
-                matched_process_map[process] = 1
+            if pattern.match(cmd) :
+                matched_cmds[cmd] = 1
                 team_name = team_name_map[pattern]
                 team_map[team_name] = 1 + team_map.get(team_name, 0)
                 break
 
-    if len(team_map) <= 1 :
-        count_map = {}
-        for process in process_map.keys() :
-            count_map.setdefault(process_map[process], []).append(process)
-        count_list = count_map.keys()
-        count_list.sort()
-        count_list.reverse()
-        for count in count_list :
-            for process in count_map[count] :
-                if not matched_process_map.has_key(process) :
-                    team_map['[' + process + ']'] = process_map[process]
-                    if len(team_map) >= 2 :
-                        return team_map
+        if not server_user and cmd == server_name :
+            server_user = user
 
-    return team_map
-
-def rcssserver() :
-    output = get_output('ps -o user= -C rcssserver').split('\n');
-    count = len(output) - 1;
     message = ' #rcssserver: '
-    if count > 0:
-        message += '%d,%s' % (count, output[0])
-        team_map = find_testing_team_map()
-        if len(team_map) > 0 :
-            message += ' ('
-            for team in sorted(team_map.keys()) :
-                message += '%s x %s, ' % (team, team_map[team])
-            message = message.rstrip(', ') + ')'
+
+    if server_user :
+        server_count = cmd_count_map[server_name]
+
+        if len(team_map) <= 1 :
+            count_map = {}
+            sucess = False
+
+            for cmd in cmd_count_map.keys() :
+                count_map.setdefault(cmd_count_map[cmd], []).append(cmd)
+
+            count_list = count_map.keys()
+            count_list.sort()
+            count_list.reverse()
+
+            for count in count_list :
+                for cmd in count_map[count] :
+                    if not matched_cmds.has_key(cmd) :
+                        team_map['[' + cmd + ']'] = cmd_count_map[cmd]
+                        if len(team_map) >= 2 :
+                            sucess = True
+                            break
+                if sucess :
+                    break
+
+        message += '%d, %s (' % (server_count, server_user)
+        for team in sorted(team_map.keys()) :
+            message += '%s x %s, ' % (team, team_map[team])
+        message = message.rstrip(', ') + ')'
     else :
         message += '0'
+
     return message
 
 def communicate(s) :
