@@ -65,18 +65,18 @@ def testing_status() :
         server_count = cmd_count_map[server_name]
 
         if len(team_map) <= 1 :
-            count_map = {}
+            count_cmd_map = {}
             sucess = False
 
             for cmd in cmd_count_map.keys() :
-                count_map.setdefault(cmd_count_map[cmd], []).append(cmd)
+                count_cmd_map.setdefault(cmd_count_map[cmd], []).append(cmd)
 
-            count_list = count_map.keys()
+            count_list = count_cmd_map.keys()
             count_list.sort()
             count_list.reverse()
 
             for count in count_list :
-                for cmd in count_map[count] :
+                for cmd in count_cmd_map[count] :
                     if not matched_cmds.has_key(cmd) :
                         team_map['[' + cmd + ']'] = cmd_count_map[cmd]
                         if len(team_map) >= 2 :
