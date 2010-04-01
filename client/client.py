@@ -40,7 +40,7 @@ def testing_status() :
     process_list = get_cmd_output('export LANG="POSIX"; ps -e -o comm,user=').strip().split('\n')
     process_list.pop(0)
 
-    team_map = {}
+    team_count_map = {}
     cmd_count_map = {}
     matched_cmds = {}
 
@@ -53,7 +53,7 @@ def testing_status() :
             if pattern.match(cmd) :
                 matched_cmds[cmd] = 1
                 team_name = team_name_map[pattern]
-                team_map[team_name] = 1 + team_map.get(team_name, 0)
+                team_count_map[team_name] = 1 + team_count_map.get(team_name, 0)
                 break
 
         if not server_user and cmd == server_name :
@@ -64,7 +64,7 @@ def testing_status() :
     if server_user :
         server_count = cmd_count_map[server_name]
 
-        if len(team_map) <= 1 :
+        if len(team_count_map) <= 1 :
             count_cmd_map = {}
             sucess = False
 
@@ -78,16 +78,16 @@ def testing_status() :
             for count in count_list :
                 for cmd in count_cmd_map[count] :
                     if not matched_cmds.has_key(cmd) :
-                        team_map['[' + cmd + ']'] = cmd_count_map[cmd]
-                        if len(team_map) >= 2 :
+                        team_count_map['[' + cmd + ']'] = cmd_count_map[cmd]
+                        if len(team_count_map) >= 2 :
                             sucess = True
                             break
                 if sucess :
                     break
 
-        message += '%d, %s (' % (server_count, server_user)
-        for team in sorted(team_map.keys()) :
-            message += '%s x %s, ' % (team, team_map[team])
+        message += '%d, %s, (' % (server_count, server_user)
+        for team in sorted(team_count_map.keys()) :
+            message += '%s x %d, ' % (team, team_count_map[team])
         message = message.rstrip(', ') + ')'
     else :
         message += '0'
