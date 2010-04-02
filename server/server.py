@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
+import os
+import sys
 import select
 import socket
-import sys
 import threading
-import os
+
+g_mutex = threading.Lock()
 
 class Server:
     def __init__(self):
         self.host = ''
         self.port = 50000
-        self.backlog = 5
         self.size = 1024
         self.server = None
         self.threads = []
@@ -56,6 +57,10 @@ class Client(threading.Thread):
                 message = '<p><strong>' + self.address[0] + '</strong>: ' + message + '</p>\n' 
                 f.write(message)
                 f.close()
+
+                g_mutex.acquire()
+                os.system('./genhtml.sh')
+                g_mutex.release()
             else:
                 self.client.close()
                 running = 0

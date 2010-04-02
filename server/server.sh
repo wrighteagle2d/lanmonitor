@@ -17,11 +17,13 @@ for i in $PATTERN; do
    rm -f $i
 done
 
+./genhtml.sh
+
 $PYTHON -mSimpleHTTPServer 1>$LOG 2>&1 &
-PID1=$_
+PID1=$!
 
 $PYTHON ./server.py &
-PID2=$_
+PID2=$!
 
 echo $PID1 $PID2 >$PID_FILE
 
