@@ -9,5 +9,7 @@ if [ -f $PID_FILE ]; then
     kill -9 `cat $PID_FILE` || exit
 fi
 
+cd /usr/local/bin/lanmonitor/client
+
 $PYTHON ./client.py &
 echo $! >$PID_FILE
