@@ -7,7 +7,7 @@ import select
 import socket
 import threading
 
-g_client_table = { }
+g_client_message_board = { }
 g_mutex = threading.Lock()
 
 g_html_head = '''<head> 
@@ -25,6 +25,27 @@ g_html_head = '''<head>
 g_html_tail= '''
 <hr>
 </body>'''
+
+def generate_html() :
+    html_content = g_html_head
+    for client in sorted(g_client_message_board.keys()) :
+        html_content += '<p><strong>' + client + '</strong>: ' + g_client_message_board[client] + '</p>\n' 
+    html_content += g_html_tail
+
+    index_html = open('index.html', 'w')
+    index_html.write(html_content)
+    index_html.close()
+
+class HtmlGenerator(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        while 1:
+            g_mutex.acquire()
+            generate_html()
+            g_mutex.release()
+            time.sleep(3)
 
 class Server:
     def __init__(self):
@@ -44,12 +65,12 @@ class Server:
             except socket.error, (value,message):
                 if self.server:
                     self.server.close()
-                print "Could not open socket: " + message
                 time.sleep(1)
 
-
     def run(self):
-        generate_html()
+        c = HtmlGenerator()
+        c.start()
+        self.threads.append(c)
 
         self.open_socket()
         running = 1
@@ -59,7 +80,6 @@ class Server:
             self.threads.append(c)
 
         # close all threads
-
         self.server.close()
         for c in self.threads:
             c.join()
@@ -78,22 +98,11 @@ class Client(threading.Thread):
 
             g_mutex.acquire()
             if message:
-                g_client_table[self.address[0]] = message
+                g_client_message_board[self.address[0]] = message
             else:
-                del g_client_table[self.address[0]]
+                del g_client_message_board[self.address[0]]
                 self.client.close()
                 running = 0
-            generate_html()
             g_mutex.release()
-
-def generate_html() :
-    html_content = g_html_head
-    for client in sorted(g_client_table.keys()) :
-        html_content += '<p><strong>' + client + '</strong>: ' + g_client_table[client] + '</p>\n' 
-    html_content += g_html_tail
-
-    index_html = open('index.html', 'w')
-    index_html.write(html_content)
-    index_html.close()
 
 Server().run()
