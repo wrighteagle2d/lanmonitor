@@ -22,9 +22,9 @@ g_html_head = '''<head>
 <hr>
 '''
 
-g_html_tail= '''
-<hr>
-</body>'''
+g_html_tail= '''<hr>
+</body>
+'''
 
 class HtmlGenerator(threading.Thread):
     def __init__(self):
