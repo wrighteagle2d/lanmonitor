@@ -45,7 +45,7 @@ class HtmlGenerator(threading.Thread):
             g_mutex.acquire()
             self.generate_html()
             g_mutex.release()
-            time.sleep(3)
+            time.sleep(1)
 
 class Server:
     def __init__(self):
