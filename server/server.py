@@ -7,7 +7,7 @@ import select
 import socket
 import threading
 
-g_client_message_board = { }
+g_message_board = { }
 g_mutex = threading.Lock()
 
 g_html_head = '''<head> 
@@ -32,8 +32,8 @@ class HtmlGenerator(threading.Thread):
 
     def generate_html(self) :
         html_content = g_html_head
-        for client in sorted(g_client_message_board.keys()) :
-            html_content += '<p><strong>' + client + '</strong>: ' + g_client_message_board[client] + '</p>\n' 
+        for client in sorted(g_message_board.keys()) :
+            html_content += '<p><strong>' + client + '</strong>: ' + g_message_board[client] + '</p>\n' 
         html_content += g_html_tail
 
         index_html = open('index.html', 'w')
@@ -98,9 +98,9 @@ class Client(threading.Thread):
 
             g_mutex.acquire()
             if message:
-                g_client_message_board[self.address[0]] = message
+                g_message_board[self.address[0]] = message
             else:
-                del g_client_message_board[self.address[0]]
+                del g_message_board[self.address[0]]
                 self.client.close()
                 running = 0
             g_mutex.release()
