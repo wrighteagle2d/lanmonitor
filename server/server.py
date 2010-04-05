@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 import select
 import socket
 import threading
@@ -17,15 +18,18 @@ class Server:
         self.threads = []
 
     def open_socket(self):
-        try:
-            self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.server.bind((self.host,self.port))
-            self.server.listen(5)
-        except socket.error, (value,message):
-            if self.server:
-                self.server.close()
-            print "Could not open socket: " + message
-            sys.exit(1)
+        while 1 :
+            try:
+                self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.server.bind((self.host,self.port))
+                self.server.listen(5)
+                break
+            except socket.error, (value,message):
+                if self.server:
+                    self.server.close()
+                print "Could not open socket: " + message
+                time.sleep(1)
+
 
     def run(self):
         self.open_socket()
@@ -53,12 +57,13 @@ class Client(threading.Thread):
         while running:
             message = self.client.recv(self.size)
             if message:
+                g_mutex.acquire()
+
                 f = open(self.address[0], 'w')
                 message = '<p><strong>' + self.address[0] + '</strong>: ' + message + '</p>\n' 
                 f.write(message)
                 f.close()
 
-                g_mutex.acquire()
                 os.system('./genhtml.sh')
                 g_mutex.release()
             else:

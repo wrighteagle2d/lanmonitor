@@ -22,6 +22,7 @@ done
 $PYTHON -mSimpleHTTPServer 1>$LOG 2>&1 &
 PID1=$!
 
+sleep 1
 $PYTHON ./server.py &
 PID2=$!
 
