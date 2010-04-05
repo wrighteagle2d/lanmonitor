@@ -32,8 +32,8 @@ class HtmlGenerator(threading.Thread):
 
     def generate_html(self) :
         html_content = g_html_head
-        for client in sorted(g_message_board.keys()) :
-            html_content += '<p><strong>' + client + '</strong>: ' + g_message_board[client] + '</p>\n' 
+        for ip in sorted(g_message_board.keys()) :
+            html_content += '<p><strong>' + ip + '</strong>: ' + g_message_board[ip] + '</p>\n' 
         html_content += g_html_tail
 
         index_html = open('index.html', 'w')
@@ -51,9 +51,7 @@ class Server:
     def __init__(self):
         self.host = ''
         self.port = 50000
-        self.size = 1024
         self.server = None
-        self.threads = []
 
     def open_socket(self):
         while 1 :
@@ -68,27 +66,17 @@ class Server:
                 time.sleep(1)
 
     def run(self):
-        c = HtmlGenerator()
-        c.start()
-        self.threads.append(c)
+        HtmlGenerator().start()
 
         self.open_socket()
-        running = 1
-        while running:
-            c = Client(self.server.accept())
-            c.start()
-            self.threads.append(c)
-
-        # close all threads
-        self.server.close()
-        for c in self.threads:
-            c.join()
+        while 1:
+            Client(self.server.accept()).start()
 
 class Client(threading.Thread):
     def __init__(self,(client,address)):
         threading.Thread.__init__(self)
         self.client = client
-        self.address = address
+        self.ip = address[0]
         self.size = 1024
 
     def run(self):
@@ -98,9 +86,9 @@ class Client(threading.Thread):
 
             g_mutex.acquire()
             if message:
-                g_message_board[self.address[0]] = message
+                g_message_board[self.ip] = message
             else:
-                del g_message_board[self.address[0]]
+                del g_message_board[self.ip]
                 self.client.close()
                 running = 0
             g_mutex.release()
