@@ -26,24 +26,24 @@ g_html_tail= '''
 <hr>
 </body>'''
 
-def generate_html() :
-    html_content = g_html_head
-    for client in sorted(g_client_message_board.keys()) :
-        html_content += '<p><strong>' + client + '</strong>: ' + g_client_message_board[client] + '</p>\n' 
-    html_content += g_html_tail
-
-    index_html = open('index.html', 'w')
-    index_html.write(html_content)
-    index_html.close()
-
 class HtmlGenerator(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
 
+    def generate_html(self) :
+        html_content = g_html_head
+        for client in sorted(g_client_message_board.keys()) :
+            html_content += '<p><strong>' + client + '</strong>: ' + g_client_message_board[client] + '</p>\n' 
+        html_content += g_html_tail
+
+        index_html = open('index.html', 'w')
+        index_html.write(html_content)
+        index_html.close()
+
     def run(self):
         while 1:
             g_mutex.acquire()
-            generate_html()
+            self.generate_html()
             g_mutex.release()
             time.sleep(3)
 
