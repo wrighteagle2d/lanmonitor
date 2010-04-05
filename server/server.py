@@ -7,7 +7,24 @@ import select
 import socket
 import threading
 
+g_client_table = { }
 g_mutex = threading.Lock()
+
+g_html_head = '''<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta http-equiv="refresh" content="2">
+<link type="text/css" rel="stylesheet" href="./style.css">
+<title> WrightEagle 2D Lan Server Status</title> 
+</head>
+
+<body>
+<h1>LAN Server Status</h1>
+<hr>
+'''
+
+g_html_tail= '''
+<hr>
+</body>'''
 
 class Server:
     def __init__(self):
@@ -32,6 +49,8 @@ class Server:
 
 
     def run(self):
+        generate_html()
+
         self.open_socket()
         running = 1
         while running:
@@ -56,20 +75,25 @@ class Client(threading.Thread):
         running = 1
         while running:
             message = self.client.recv(self.size)
+
+            g_mutex.acquire()
             if message:
-                g_mutex.acquire()
-
-                f = open(self.address[0], 'w')
-                message = '<p><strong>' + self.address[0] + '</strong>: ' + message + '</p>\n' 
-                f.write(message)
-                f.close()
-
-                os.system('./genhtml.sh')
-                g_mutex.release()
+                g_client_table[self.address[0]] = message
             else:
+                del g_client_table[self.address[0]]
                 self.client.close()
                 running = 0
+            generate_html()
+            g_mutex.release()
 
-s = Server()
-s.run()
+def generate_html() :
+    html_content = g_html_head
+    for client in sorted(g_client_table.keys()) :
+        html_content += '<p><strong>' + client + '</strong>: ' + g_client_table[client] + '</p>\n' 
+    html_content += g_html_tail
 
+    index_html = open('index.html', 'w')
+    index_html.write(html_content)
+    index_html.close()
+
+Server().run()

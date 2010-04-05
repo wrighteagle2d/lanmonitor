@@ -8,6 +8,8 @@ if [ -f $PID_FILE ]; then
     kill -9 `cat $PID_FILE` || exit
 fi
 
+cd /usr/local/bin/lanmonitor/server
+
 $PYTHON -mSimpleHTTPServer 1>$LOG 2>&1 &
 PID1=$!
 
