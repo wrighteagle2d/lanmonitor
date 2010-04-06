@@ -10,7 +10,8 @@ import threading
 g_message_board = { }
 g_mutex = threading.Lock()
 
-g_html_head = '''<head> 
+g_html_head = """\
+<head> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <meta http-equiv="refresh" content="2">
 <link type="text/css" rel="stylesheet" href="./style.css">
@@ -20,11 +21,12 @@ g_html_head = '''<head>
 <body>
 <h1>LAN Server Status</h1>
 <hr>
-'''
+"""
 
-g_html_tail= '''<hr>
+g_html_tail= """\
+<hr>
 </body>
-'''
+"""
 
 class HtmlGenerator(threading.Thread):
     def __init__(self):
