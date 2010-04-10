@@ -10,12 +10,9 @@ fi
 
 cd /usr/local/bin/lanmonitor/server
 
-$PYTHON -mSimpleHTTPServer 1>$LOG 2>&1 &
-PID1=$!
-
 sleep 1
 $PYTHON ./server.py &
-PID2=$!
+PID=$!
 
-echo $PID1 $PID2 >$PID_FILE
+echo $PID >$PID_FILE
 
