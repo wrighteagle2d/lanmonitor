@@ -1,6 +1,5 @@
 #!/bin/bash
 
-LOG="log"
 PYTHON=`which python`
 PID_FILE="/tmp/lanmonitor_server.pid"
 
@@ -10,7 +9,6 @@ fi
 
 cd /usr/local/bin/lanmonitor/server
 
-sleep 1
 $PYTHON ./server.py &
 PID=$!
 
