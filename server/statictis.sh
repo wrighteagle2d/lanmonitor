@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cat log | awk '{print $1}' | sort | uniq -c | sort -n | grep -v '(' | grep '\.'
+cat log | awk '{print $1}' | sort | uniq -c | sort -n
