@@ -40,7 +40,7 @@ class HtmlGenerator(threading.Thread):
     def generate_html(self) :
         html_content = g_html_head
         for ip in sorted(g_message_board.keys()) :
-            html_content += '<p><strong>' + ip + '</strong>: ' + g_message_board[ip] + '</p>\n' 
+            html_content += ('<p><a href="http://%s/result.html" target="_blank"><strong>%s</strong></a>: ' + g_message_board[ip] + '</p>\n') % (ip, ip)
         html_content += g_html_tail
 
         index_html = open('index.html', 'w')
