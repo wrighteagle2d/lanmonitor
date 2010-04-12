@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
-import os
 import re
-import sys
 import time
-import random
 import socket
+import commands
 
 host = '192.168.26.160'
 port = 50000
@@ -19,25 +17,19 @@ team_name_map = {
             re.compile('SputCoach'): 'BrainStormer'
         }
 
-def get_cmd_output(cmd) :
-    pipe = os.popen(cmd)
-    output = pipe.read()
-    pipe.close()
-    return output
-
 def build_message() :
     message = uptime() + ", "
     message += testing_status()
     return message 
 
 def uptime() :
-    return get_cmd_output('uptime').strip()
+    return commands.getoutput('uptime').strip()
 
 def testing_status() :
     server_name = 'rcssserver'
     server_user = ''
 
-    process_list = get_cmd_output('ps -e -o comm,user=').strip().split('\n')
+    process_list = commands.getoutput('ps -e -o comm,user=').strip().split('\n')
     process_list.pop(0)
 
     team_count_map = {}
