@@ -9,6 +9,7 @@ fi
 
 cd /usr/local/bin/lanmonitor/server
 
+sleep 5
 $PYTHON ./server.py &
 PID=$!
 
