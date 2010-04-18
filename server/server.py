@@ -37,13 +37,13 @@ class HtmlGenerator(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
 
-    def generate_html(self) :
+    def generate_html(self):
         html_content = g_html_head
-        for ip in sorted(g_message_board.keys()) :
-            html_content += ('<p><a href="http://%s/result.html" target="_blank"><strong>%s</strong></a>: ' + g_message_board[ip] + '</p>\n') % (ip, ip)
+        for ip in sorted(g_message_board.keys()):
+            html_content += ('<p><a href="http://%s/result.html" target="_blank"><strong>%s</strong></a>: ' + g_message_board[ip] + "</p>\n") % (ip, ip)
         html_content += g_html_tail
 
-        index_html = open('index.html', 'w')
+        index_html = open("index.html", "w")
         index_html.write(html_content)
         index_html.close()
 
@@ -56,12 +56,12 @@ class HtmlGenerator(threading.Thread):
 
 class Server:
     def __init__(self):
-        self.host = ''
+        self.host = ""
         self.port = 50000
         self.server = None
 
     def open_socket(self):
-        while 1 :
+        while 1:
             try:
                 self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.server.bind((self.host,self.port))
