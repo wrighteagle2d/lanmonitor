@@ -97,7 +97,6 @@ def communicate(s):
             break
         time.sleep(10)
 
-
 def run():
     while 1:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
