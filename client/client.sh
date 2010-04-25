@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export LANG="POSIC"
+export LANG="POSIX"
 
 PID_FILE="/tmp/lanmonitor_client.pid"
 PYTHON=`which python`
