@@ -13,8 +13,8 @@ team_name_map = {
             re.compile("helios"): "Helios",
             re.compile("nq"): "LsuAmoyNQ",
             re.compile("oxsy"): "Oxsy",
-            re.compile("BS2kAgent"): "BrainStormer",
-            re.compile("SputCoach"): "BrainStormer"
+            re.compile("BS2kAgent"): "BrainStormers",
+            re.compile("SputCoach"): "BrainStormers"
         }
 
 def build_message():
