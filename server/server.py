@@ -25,8 +25,7 @@ g_html_head = """\
 g_html_tail= """\
 <hr>
 <p align="left"> 
-<a href="http://192.168.26.99/~bbs" target="_blank">BBS</a>
-<a href="http://192.168.26.160/cgi-bin/viewvc.cgi/" target="_blank">CVS</a>
+<a href="http://192.168.26.160/" target="_blank">160 Host</a>
 </p> 
 <hr>
 </body>
