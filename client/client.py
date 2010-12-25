@@ -20,13 +20,13 @@ team_name_map = {
 
 def build_message():
     message = uptime() + ", "
-    message += testing_status()
+    message += process_status()
     return message 
 
 def uptime():
     return commands.getoutput("uptime").strip()
 
-def testing_status():
+def process_status():
     server_name = "rcssserver"
     server_user = ""
     server_count = 0
@@ -77,12 +77,15 @@ def testing_status():
             if sucess:
                 break
 
-    message = " #rcssserver: %d" % server_count
+    message = ""
 
-    if server_user:
-        message += ", %s" % server_user
+    if server_count:
+        message = " #rcssserver: %d" % server_count
+        if server_user:
+            message += ", %s" % server_user
+        message += ","
 
-    message += ", ("
+    message += " ("
     for team in sorted(team_count_map.keys()):
         message += "%s x %d, " % (team, team_count_map[team])
     message = message.rstrip(", ") + ")"
