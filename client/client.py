@@ -15,11 +15,14 @@ team_name_map = {
             re.compile("nq"): "LsuAmoyNQ",
             re.compile("oxsy"): "Oxsy",
             re.compile("BS2kAgent"): "BrainStormers",
-            re.compile("SputCoach"): "BrainStormers"
+            re.compile("SputCoach"): "BrainStormers",
+            re.compile("NemesisAgent"): "Nemesis",
+            re.compile("sample_"): "Agent2D",
+            re.compile("ESKILAS"): "Eskilas"
         }
 
 def build_message():
-    message = uptime() + ", "
+    message = uptime()
     message += process_status()
     return message 
 
@@ -56,39 +59,18 @@ def process_status():
     if cmd_count_map.has_key(server_name):
         server_count = cmd_count_map[server_name]
 
-    if len(team_count_map) <= 1:
-        count_cmd_map = {}
-        sucess = False
-
-        for cmd in cmd_count_map.keys():
-            count_cmd_map.setdefault(cmd_count_map[cmd], []).append(cmd)
-
-        count_list = count_cmd_map.keys()
-        count_list.sort()
-        count_list.reverse()
-
-        for count in count_list:
-            for cmd in count_cmd_map[count]:
-                if not matched_cmds.has_key(cmd):
-                    team_count_map["[" + cmd + "]"] = cmd_count_map[cmd]
-                    if len(team_count_map) >= 2:
-                        sucess = True
-                        break
-            if sucess:
-                break
-
     message = ""
 
     if server_count:
-        message = " #rcssserver: %d" % server_count
+        message += ", #rcssserver: %d" % server_count
         if server_user:
             message += ", %s" % server_user
-        message += ","
 
-    message += " ("
-    for team in sorted(team_count_map.keys()):
-        message += "%s x %d, " % (team, team_count_map[team])
-    message = message.rstrip(", ") + ")"
+	if len(team_count_map):
+		message += ", ("
+		for team in sorted(team_count_map.keys()):
+			message += "%s x %d, " % (team, team_count_map[team])
+		message = message.rstrip(", ") + ")"
 
     return message
 
