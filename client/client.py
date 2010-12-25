@@ -82,10 +82,10 @@ def testing_status():
     if server_user:
         message += ", %s" % server_user
 
-        message += ", ("
-        for team in sorted(team_count_map.keys()):
-            message += "%s x %d, " % (team, team_count_map[team])
-        message = message.rstrip(", ") + ")"
+    message += ", ("
+    for team in sorted(team_count_map.keys()):
+        message += "%s x %d, " % (team, team_count_map[team])
+    message = message.rstrip(", ") + ")"
 
     return message
 
