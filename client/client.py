@@ -11,7 +11,7 @@ port = 50000
 team_name_map = {
             re.compile("WE20"): "WrightEagle",
             re.compile("WrightEagle"): "WrightEagle",
-            re.compile("helios"): "Helios",
+            re.compile("helios_"): "Helios",
             re.compile("nq"): "LsuAmoyNQ",
             re.compile("oxsy"): "Oxsy",
             re.compile("BS2kAgent"): "BrainStormers",
@@ -66,11 +66,11 @@ def process_status():
         if server_user:
             message += ", %s" % server_user
 
-	if len(team_count_map):
-		message += ", ("
-		for team in sorted(team_count_map.keys()):
-			message += "%s x %d, " % (team, team_count_map[team])
-		message = message.rstrip(", ") + ")"
+    if len(team_count_map) >= 1:
+        message += ", ("
+        for team in sorted(team_count_map.keys()):
+            message += "%s x %d, " % (team, team_count_map[team])
+        message = message.rstrip(", ") + ")"
 
     return message
 
