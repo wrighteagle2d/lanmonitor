@@ -62,12 +62,12 @@ def process_status():
     message = ""
 
     if server_count:
-        message += ", #rcssserver: %d" % server_count
+        message += "; #rcssserver: %d" % server_count
         if server_user:
             message += ", %s" % server_user
 
     if len(team_count_map) >= 1:
-        message += ", ("
+        message += "; ("
         for team in sorted(team_count_map.keys()):
             message += "%s x %d, " % (team, team_count_map[team])
         message = message.rstrip(", ") + ")"
