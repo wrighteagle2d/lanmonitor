@@ -7,3 +7,17 @@ html {
 body {
 	background-color:#b0c4de;
 }
+
+a {
+    font-weight: bold;
+    font-family: Verdana;
+    font-size: 12px;
+    color: #00008b;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    background-color: bisque;
+}
+
