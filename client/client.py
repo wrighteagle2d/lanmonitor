@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import re
+import os
 import time
 import socket
 import commands
@@ -24,6 +25,7 @@ team_name_map = {
 def build_message():
     message = uptime()
     message += process_status()
+    message += check_temp()
     return message 
 
 def uptime():
@@ -73,6 +75,11 @@ def process_status():
         message = message.rstrip(", ") + ")"
 
     return message
+
+def check_temp():
+    if os.path.exists("/tmp/autotest::temp"):
+        return "; autotest::temp"
+    return ""
 
 def communicate(s):
     while 1:
