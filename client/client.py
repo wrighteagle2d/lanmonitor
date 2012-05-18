@@ -8,6 +8,7 @@ import commands
 
 host = "192.168.26.160"
 port = 50000
+server_count = 0
 
 team_name_map = {
             re.compile("WE20"): "WrightEagle",
@@ -26,12 +27,27 @@ def build_message():
     message = uptime()
     message += process_status()
     message += check_temp()
+    message += check_winrate()
+
     return message 
+
+def check_winrate():
+    winrate = ""
+
+    if server_count > 0 and os.path.exists("/tmp/result.html") and os.access("/tmp/result.html", os.R_OK):
+        winrate = commands.getoutput("cat /tmp/result.html | grep \'nbsp;WinRate\' |  sed \'s/&nbsp;/ /g\' | awk \'{print $6}\'").strip(",")
+
+        if len(winrate) > 0:
+            winrate = "; " + winrate + "%"
+
+    return winrate
 
 def uptime():
     return commands.getoutput("uptime").strip()
 
 def process_status():
+    global server_count
+
     server_name = "rcssserver"
     server_user = ""
     server_count = 0
@@ -88,7 +104,7 @@ def communicate(s):
         except socket.error, (value, message):
             print "send error: " + message
             break
-        time.sleep(10)
+        time.sleep(30)
 
 def run():
     while 1:
