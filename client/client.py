@@ -27,20 +27,21 @@ def build_message():
     message = uptime()
     message += process_status()
     message += check_temp()
-    message += check_winrate()
+    message += check_testinfo()
 
     return message 
 
-def check_winrate():
-    winrate = ""
+def check_testinfo():
+    message = ""
 
     if server_count > 0 and os.path.exists("/tmp/result.html") and os.access("/tmp/result.html", os.R_OK):
-        winrate = commands.getoutput("cat /tmp/result.html | grep \'nbsp;WinRate\' |  sed \'s/&nbsp;/ /g\' | awk \'{print $6}\'").strip(",")
+        game_count = commands.getoutput("cat /tmp/result.html | grep \'>Game&nbsp;Count\' | sed \'s/&nbsp;/ /g\' | awk \'{print $5}\'")
+        win_rate = commands.getoutput("cat /tmp/result.html | grep \'&nbsp;WinRate\' |  sed \'s/&nbsp;/ /g\' | awk \'{print $6}\'").strip(",")
 
-        if len(winrate) > 0:
-            winrate = "; " + winrate + "%"
+        if len(game_count) > 0 and len(win_rate) > 0:
+            message = "; #" + game_count + ", " +  win_rate + "%"
 
-    return winrate
+    return message
 
 def uptime():
     return commands.getoutput("uptime").strip()
@@ -80,7 +81,7 @@ def process_status():
     message = ""
 
     if server_count:
-        message += "; #rcssserver: %d" % server_count
+        message += "; #rcss: %d" % server_count
         if server_user:
             message += ", %s" % server_user
 
