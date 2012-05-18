@@ -12,7 +12,7 @@ g_mutex = threading.Lock()
 g_html_head = """\
 <head> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-<meta http-equiv="refresh" content="2">
+<meta http-equiv="refresh" content="5">
 <link type="text/css" rel="stylesheet" href="./style.css">
 <title> WrightEagle 2D Lan Server Status</title> 
 </head>
