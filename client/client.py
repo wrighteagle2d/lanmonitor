@@ -39,7 +39,7 @@ def check_testinfo():
         win_rate = commands.getoutput("cat /tmp/result.html | grep \'&nbsp;WinRate\' |  sed \'s/&nbsp;/ /g\' | awk \'{print $6}\'").strip(",")
 
         if len(game_count) > 0 and len(win_rate) > 0:
-            message = "; #game " + game_count + ", " +  win_rate + "%"
+            message = "; #game: " + game_count + ", " +  win_rate + "%"
 
     return message
 
