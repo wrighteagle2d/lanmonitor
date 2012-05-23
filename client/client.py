@@ -85,18 +85,16 @@ def process_status():
 def test_info():
     message = ""
 
-    if server_count <= 0:
-        return message
+    if server_count > 0:
+        if os.path.exists("/tmp/autotest::temp"):
+            message += "; autotest::temp"
 
-    if os.path.exists("/tmp/autotest::temp"):
-        message += "; autotest::temp"
+        if os.path.exists("/tmp/result.html") and os.access("/tmp/result.html", os.R_OK):
+            game_count = commands.getoutput("cat /tmp/result.html | grep \'>Game&nbsp;Count\' | sed \'s/&nbsp;/ /g\' | awk \'{print $5}\'")
+            win_rate = commands.getoutput("cat /tmp/result.html | grep \'&nbsp;WinRate\' |  sed \'s/&nbsp;/ /g\' | awk \'{print $6}\'").strip(",")
 
-    if os.path.exists("/tmp/result.html") and os.access("/tmp/result.html", os.R_OK):
-        game_count = commands.getoutput("cat /tmp/result.html | grep \'>Game&nbsp;Count\' | sed \'s/&nbsp;/ /g\' | awk \'{print $5}\'")
-        win_rate = commands.getoutput("cat /tmp/result.html | grep \'&nbsp;WinRate\' |  sed \'s/&nbsp;/ /g\' | awk \'{print $6}\'").strip(",")
-
-        if len(game_count) > 0 and len(win_rate) > 0:
-            message += "; #game: " + game_count + ", " +  win_rate + "%"
+            if len(game_count) > 0 and len(win_rate) > 0:
+                message += "; #game: " + game_count + ", " +  win_rate + "%"
 
     return message
 
