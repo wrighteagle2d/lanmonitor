@@ -24,24 +24,13 @@ team_name_map = {
         }
 
 def build_message():
-    message = uptime()
-    message += process_status()
-    message += check_temp()
-    message += check_testinfo()
-
-    return message 
-
-def check_testinfo():
     message = ""
 
-    if server_count > 0 and os.path.exists("/tmp/result.html") and os.access("/tmp/result.html", os.R_OK):
-        game_count = commands.getoutput("cat /tmp/result.html | grep \'>Game&nbsp;Count\' | sed \'s/&nbsp;/ /g\' | awk \'{print $5}\'")
-        win_rate = commands.getoutput("cat /tmp/result.html | grep \'&nbsp;WinRate\' |  sed \'s/&nbsp;/ /g\' | awk \'{print $6}\'").strip(",")
+    message += uptime()
+    message += process_status()
+    message += test_info()
 
-        if len(game_count) > 0 and len(win_rate) > 0:
-            message = "; #game: " + game_count + ", " +  win_rate + "%"
-
-    return message
+    return message 
 
 def uptime():
     return commands.getoutput("uptime").strip()
@@ -93,10 +82,23 @@ def process_status():
 
     return message
 
-def check_temp():
+def test_info():
+    message = ""
+
+    if server_count <= 0:
+        return message
+
     if os.path.exists("/tmp/autotest::temp"):
-        return "; autotest::temp"
-    return ""
+        message += "; autotest::temp"
+
+    if os.path.exists("/tmp/result.html") and os.access("/tmp/result.html", os.R_OK):
+        game_count = commands.getoutput("cat /tmp/result.html | grep \'>Game&nbsp;Count\' | sed \'s/&nbsp;/ /g\' | awk \'{print $5}\'")
+        win_rate = commands.getoutput("cat /tmp/result.html | grep \'&nbsp;WinRate\' |  sed \'s/&nbsp;/ /g\' | awk \'{print $6}\'").strip(",")
+
+        if len(game_count) > 0 and len(win_rate) > 0:
+            message += "; #game: " + game_count + ", " +  win_rate + "%"
+
+    return message
 
 def communicate(s):
     while 1:
