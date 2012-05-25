@@ -86,7 +86,7 @@ def test_info():
     message = ""
 
     if server_count > 0:
-        if os.path.exists("/tmp/autotest::temp") and os.path.getsize("/tmp/autotest::temp") > 0:
+        if os.path.exists("/tmp/autotest::temp"):
             message += "; autotest::temp"
 
         if os.path.exists("/tmp/result.html") and os.access("/tmp/result.html", os.R_OK):
