@@ -20,6 +20,7 @@ team_name_map = {
             re.compile("SputCoach"): "BrainStormers",
             re.compile("NemesisAgent"): "Nemesis",
             re.compile("sample_"): "Agent2D",
+            re.compile("marlik_"): "Marlik",
             re.compile("ESKILAS"): "Eskilas"
         }
 
