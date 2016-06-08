@@ -6,15 +6,15 @@ import time
 import socket
 import threading
 
-g_message_board = { }
+g_message_board = {}
 g_mutex = threading.Lock()
 
 g_html_head = """\
-<head> 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="refresh" content="5">
 <link type="text/css" rel="stylesheet" href="./style.css">
-<title> WrightEagle 2D Lan Server Status</title> 
+<title> WrightEagle 2D Lan Server Status</title>
 </head>
 
 <body>
@@ -24,9 +24,9 @@ g_html_head = """\
 
 g_html_tail= """\
 <hr>
-<p align="left"> 
+<p align="left">
 <a href="http://192.168.26.160/" target="_blank">160 Host</a>
-</p> 
+</p>
 <hr>
 </body>
 """

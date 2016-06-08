@@ -31,7 +31,7 @@ def build_message():
     message += process_status()
     message += test_info()
 
-    return message 
+    return message
 
 def uptime():
     return commands.getoutput("uptime").strip()
